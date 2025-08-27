@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"fr.campus.thecrawler"},{"l":"fr.campus.thecrawler.characters"},{"l":"fr.campus.thecrawler.core"},{"l":"fr.campus.thecrawler.equipment"}];updateSearchResults();
