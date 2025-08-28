@@ -1,7 +1,7 @@
 package fr.campus.thecrawler.equipment;
 
 /**
- * A potion that increases defense or heals.
+ * A potion that increases heals.
  */
 public class Potion extends DefensiveEquipment {
 

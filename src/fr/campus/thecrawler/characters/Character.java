@@ -1,6 +1,6 @@
 package fr.campus.thecrawler.characters;
 
-public class Character {
+public abstract class Character {
     private String name;
     private int attack;
     private int life;
@@ -14,7 +14,7 @@ public class Character {
     //private Equipment.OffensiveEquipment;
 
 
-    public Character(String type, String name, int life, int attack, String offensiveEquipmentType){
+    protected Character(String type, String name, int life, int attack, String offensiveEquipmentType){
         this.type = type;
         this.name = name;
         this.life = life;

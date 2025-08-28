@@ -3,6 +3,10 @@ package fr.campus.thecrawler;
 import fr.campus.thecrawler.characters.Character;
 import fr.campus.thecrawler.core.Board;
 import fr.campus.thecrawler.core.Dice;
+import fr.campus.thecrawler.characters.Warrior;
+import fr.campus.thecrawler.characters.Wizard;
+import fr.campus.thecrawler.exceptions.PersonnageHorsPlateauException;
+
 
 import java.util.Scanner;
 
@@ -40,33 +44,26 @@ public class Menu {
     public Character createCharacter() {
         showMessage("Création du personnage :");
         showMessage("1) Warrior  2) Wizard");
+
         int choice = readInt("Votre choix: ");
-
-        String type;
-        if (choice == 1) {
-            type = "Warrior";
-        } else {
-            type = "Wizard";
-        }
-
         String name = getInput("Nom du personnage: ");
-        int life;
-        int attack;
+        Character player;
 
-        if (type.equals("Warrior")) {
-            life = 10;
-            attack = 5;
+        if (choice == 1) {
+            player = new Warrior(name);
         } else {
-            life = 6;
-            attack = 8;
+            player = new Wizard(name);
         }
 
-        return new Character(type, name, life, attack,"offensiveEquipmentType");
+
+        showMessage("Tu as créé : " + player);
+        return player;
     }
 
 
 
-    public void playerTurn(Character character, Board board, Dice dice) {
+    public void playerTurn(Character character, Board board, Dice dice)
+                throws PersonnageHorsPlateauException {
 
         String cmd = readLine("Appuie sur Entrée pour lancer le dé, ou tape 'q' pour quitter: ").trim().toLowerCase();
         if (cmd.equals("q")) {
@@ -80,7 +77,13 @@ public class Menu {
 
         int newPos = character.getPosition() + roll;
         int last = board.getNumCells();
-        if (newPos > last) newPos = last;
+
+
+        if (newPos > last) {
+            throw new PersonnageHorsPlateauException(
+                    character.getName() + " Tu as dépassé la dernière case (" + last + ")."
+            );
+        }
 
         character.setPosition(newPos);
         showMessage(character.getName() + " avance à la case " + character.getPosition() + "/" + last);

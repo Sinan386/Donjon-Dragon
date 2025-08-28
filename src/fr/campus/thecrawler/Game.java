@@ -57,7 +57,14 @@ public class Game {
         menu.showMessage("Commençons");
 
         while (character.getPosition() != board.getNumCells() && !menu.isGameClosed()) {
-            menu.playerTurn(character, board, dice);
+            try {
+                menu.playerTurn(character, board, dice);
+            }   catch (fr.campus.thecrawler.exceptions.PersonnageHorsPlateauException e) {
+                character.setPosition(board.getNumCells());
+                menu.showMessage("⚠ " + e.getMessage());
+                menu.showMessage("Tu es placé sur la dernière case : " + board.getNumCells() + ".");
+            }
+
         }
 
         if (character.getPosition() == board.getNumCells()) {
