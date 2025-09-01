@@ -18,8 +18,8 @@ public class Game {
      */
     public Game() {
         menu = new Menu();
-        dice = new Dice(6);
-        board = new Board(64);
+        dice = new Dice();
+        board = new Board();
     }
 
     /**

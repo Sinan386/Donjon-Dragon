@@ -6,6 +6,8 @@ import fr.campus.thecrawler.core.Dice;
 import fr.campus.thecrawler.characters.Warrior;
 import fr.campus.thecrawler.characters.Wizard;
 import fr.campus.thecrawler.exceptions.PersonnageHorsPlateauException;
+import fr.campus.thecrawler.core.Cell;
+
 
 
 import java.util.Scanner;
@@ -68,7 +70,7 @@ public class Menu {
         String cmd = readLine("Appuie sur Entrée pour lancer le dé, ou tape 'q' pour quitter: ").trim().toLowerCase();
         if (cmd.equals("q")) {
             gameClosed = true;
-            showMessage("Fermeture de la partie demandée.");
+            showMessage("La Partie a été quitté.");
             return;
         }
 
@@ -87,7 +89,10 @@ public class Menu {
 
         character.setPosition(newPos);
         showMessage(character.getName() + " avance à la case " + character.getPosition() + "/" + last);
+        Cell current = board.getCellAt(character.getPosition());
+        showMessage(current.toString());
     }
+
 
 
     public boolean isGameClosed() {

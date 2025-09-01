@@ -4,6 +4,7 @@ package fr.campus.thecrawler.characters;
 public class Warrior extends Character {
 
     public Warrior(String name) {
+
         super("Warrior", name, 10, 5, "Weapon"); // base stats for a warrior
     }
 

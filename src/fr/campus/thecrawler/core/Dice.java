@@ -1,7 +1,11 @@
 package fr.campus.thecrawler.core;
 
 
+public class Dice {
+    public int roll() { return 1; } // dé pipé
+}
 
+/*
 public class Dice {
     private int faces;
 
@@ -21,5 +25,5 @@ public class Dice {
         return (int) (Math.random() * faces) + 1;
     }
 }
-
+*/
 
