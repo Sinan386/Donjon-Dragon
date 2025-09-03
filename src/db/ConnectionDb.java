@@ -8,16 +8,18 @@ public class ConnectionDb {
 
     public ConnectionDb() {
         this.url = "jdbc:mysql://localhost:3306/Donjon";
-        this.username= "root";
-        this.password= "fakepassword";
+        this.username = "root";
+        this.password = "fakepassword";
     }
 
-    public void selectAll() throws SQLException {
-        Connection conn = DriverManager.getConnection(url, username, password);
+    public Connection getConnection() throws SQLException {
+        return  DriverManager.getConnection(url, username, password);
+
     }
 
 }
-/*
+
+/* TEST LE CONNEXION A LA DB
     public static void main(String[] args) {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Donjon", "root", "fakepassword");
@@ -33,5 +35,7 @@ public class ConnectionDb {
     }
 
 }
+
  */
+
 
