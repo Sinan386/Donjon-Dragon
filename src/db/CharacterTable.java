@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import db.ConnectionDb;
 import fr.campus.thecrawler.core.Cell;
+import fr.campus.thecrawler.characters.Character;
 
 
 public class CharacterTable {
@@ -30,6 +31,34 @@ public class CharacterTable {
         }
         return heroes;
     }
+
+    public void createHero (Character hero) {
+        final String sql = "INSERT INTO `Character` (`name`, `Type`," +
+                " `LifePoints`, `Strenght` ) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn =db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+
+             ps.setString(1, hero.getName());
+             ps.setString(2, hero.getType());
+             ps.setInt(3, hero.getLifePoints());
+             ps.setInt(4, hero.getStrenght));
+
+    } catch (SQLException e) {
+
+         e.getMessage());
+    }
+}
+
+
+
+}
+
+        }
+
+    }
+
+
 
 
 

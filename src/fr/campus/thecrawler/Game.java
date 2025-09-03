@@ -4,6 +4,7 @@ import db.CharacterTable;
 import fr.campus.thecrawler.characters.Character;
 import fr.campus.thecrawler.core.Board;
 import fr.campus.thecrawler.core.Dice;
+import db.CharacterTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,10 @@ public class Game {
         Character player = menu.createCharacter();
         menu.showMessage("Bienvenue à toi " + player.getName() + " !");
 
+
         CharacterTable characterTable = new CharacterTable();
+        characterTable.createHero(player);
+
         List<String> heroes = new ArrayList<>();
         heroes = characterTable.getHeroes();
         for (String toto : heroes) { // dans la boucle for each en Java je dois le définir String et lui donner un nom
