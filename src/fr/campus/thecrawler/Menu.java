@@ -1,71 +1,135 @@
 package fr.campus.thecrawler;
 
+import db.CharacterTable;
 import fr.campus.thecrawler.characters.Character;
-import fr.campus.thecrawler.core.Board;
-import fr.campus.thecrawler.core.Dice;
 import fr.campus.thecrawler.characters.Warrior;
 import fr.campus.thecrawler.characters.Wizard;
-import fr.campus.thecrawler.exceptions.PersonnageHorsPlateauException;
+import fr.campus.thecrawler.core.Board;
+import fr.campus.thecrawler.core.Dice;
 import fr.campus.thecrawler.core.Cell;
+import fr.campus.thecrawler.exceptions.PersonnageHorsPlateauException;
 
-
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
     private boolean gameClosed = false;
 
-    /* --- Affichage --- */
-    public void showMessage(String msg) {
-        System.out.println(msg);
-    }
+    // --- Affichage ---
+    public void showMessage(String msg) { System.out.println(msg); }
+    public void displayMessage(String msg) { showMessage(msg); }
 
-    /* --- Saisie --- */
-    private String readLine(String prompt) {
-        System.out.print(prompt);
-        return scanner.nextLine();
-    }
-
+    // --- Saisie ---
+    private String readLine(String prompt) { System.out.print(prompt); return scanner.nextLine(); }
     private int readInt(String prompt) {
         while (true) {
             System.out.print(prompt);
             String s = scanner.nextLine().trim();
-            try {
-                return Integer.parseInt(s);
-            } catch (NumberFormatException e) {
-                System.out.println("Veuillez entrer un nombre valide.");
-            }
+            try { return Integer.parseInt(s); }
+            catch (NumberFormatException e) { System.out.println("Veuillez entrer un nombre valide."); }
         }
     }
-    private String getInput(String prompt) {
-        System.out.print(prompt);
-        return scanner.nextLine();
-    }
+    private String getInput(String prompt) { System.out.print(prompt); return scanner.nextLine(); }
 
+    // --- Création de personnage (comme avant) ---
     public Character createCharacter() {
         showMessage("Création du personnage :");
         showMessage("1) Warrior  2) Wizard");
-
         int choice = readInt("Votre choix: ");
         String name = getInput("Nom du personnage: ");
-        Character player;
-
-        if (choice == 1) {
-            player = new Warrior(name);
-        } else {
-            player = new Wizard(name);
-        }
-
-
+        Character player = (choice == 1) ? new Warrior(name) : new Wizard(name);
         showMessage("Tu as créé : " + player);
         return player;
     }
 
+    // --- Menu principal 1..4 ---
+    public Character mainCharacterMenu(CharacterTable repo) {
+        while (true) {
+            displayMessage("1. Créer un nouveau personnage");
+            displayMessage("2. Voir les informations du personnage");
+            displayMessage("3. Choisir un personnage déjà existant");
+            displayMessage("4. Quitter le jeu");
+            int choix = readInt("Votre choix : ");
 
+            if (choix == 1) {
+                Character c = createCharacter();
+                repo.createHero(c);              // enregistre + id via RETURN_GENERATED_KEYS
+                return c;
+            } else if (choix == 2) {
+                afficherInfosDepuisBdd(repo);    // liste simple des noms
+            } else if (choix == 3) {
+                Character choisi = choisirDepuisBdd(repo); // lit le type en BDD ici
+                if (choisi != null) return choisi;
+            } else if (choix == 4) {
+                displayMessage("Au revoir !");
+                gameClosed = true;
+                return null;
+            } else {
+                displayMessage("Choix invalide. Réessaie.");
+            }
+        }
+    }
 
+    // --- Option 2 : afficher les noms depuis la BDD (avec tes variables heroes/toto) ---
+    public void afficherInfosDepuisBdd(CharacterTable characterTable) {
+        List<String> heroes = new ArrayList<>();
+        heroes = characterTable.getHeroes();
+        if (heroes.isEmpty()) {
+            System.out.println("(Aucun personnage en BDD)");
+            return;
+        }
+        System.out.println("=== Personnages en BDD ===");
+        for (String toto : heroes) {
+            System.out.println(toto);
+        }
+    }
+
+    // --- Option 3 : choisir un héros existant (lit le type directement en BDD ici) ---
+    private Character choisirDepuisBdd(CharacterTable repo) {
+        List<String> heroes = repo.getHeroes();
+        if (heroes.isEmpty()) {
+            displayMessage("(Aucun héros en base)");
+            return null;
+        }
+
+        displayMessage("=== Choisis un héros ===");
+        for (int i = 0; i < heroes.size(); i++) {
+            displayMessage((i + 1) + ") " + heroes.get(i));
+        }
+        int idx = readInt("Numéro du héros : ");
+        if (idx < 1 || idx > heroes.size()) {
+            displayMessage("Numéro invalide.");
+            return null;
+        }
+
+        String name = heroes.get(idx - 1);
+
+        // Récupère le type en BDD sans créer de nouvelle méthode dans CharacterTable
+        String type = null;
+        try (java.sql.Connection conn = new db.ConnectionDb().getConnection();
+             java.sql.PreparedStatement ps = conn.prepareStatement(
+                     "SELECT type FROM `characters` WHERE name=? LIMIT 1")) {
+            ps.setString(1, name);
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) type = rs.getString("type");
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        if (type == null) {
+            displayMessage("Type introuvable en BDD pour " + name);
+            return null;
+        }
+
+        return "Warrior".equalsIgnoreCase(type) ? new Warrior(name) : new Wizard(name);
+    }
+
+    // --- Ton tour de jeu (conservé) ---
     public void playerTurn(Character character, Board board, Dice dice)
-                throws PersonnageHorsPlateauException {
+            throws PersonnageHorsPlateauException {
 
         String cmd = readLine("Appuie sur Entrée pour lancer le dé, ou tape 'q' pour quitter: ").trim().toLowerCase();
         if (cmd.equals("q")) {
@@ -80,7 +144,6 @@ public class Menu {
         int newPos = character.getPosition() + roll;
         int last = board.getNumCells();
 
-
         if (newPos > last) {
             throw new PersonnageHorsPlateauException(
                     character.getName() + " Tu as dépassé la dernière case (" + last + ")."
@@ -93,9 +156,5 @@ public class Menu {
         showMessage(current.toString());
     }
 
-
-
-    public boolean isGameClosed() {
-        return gameClosed;
-    }
+    public boolean isGameClosed() { return gameClosed; }
 }

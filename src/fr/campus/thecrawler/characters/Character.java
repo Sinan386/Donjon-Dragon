@@ -23,6 +23,16 @@ public abstract class Character {
         this.position = 1;
     }
 
+    private int id; // 0 si pas encore enregistré en BDD
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
     public String getType() {
         return type;
     }

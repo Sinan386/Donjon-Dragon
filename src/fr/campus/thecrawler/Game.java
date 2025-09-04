@@ -24,7 +24,7 @@ public class Game {
     public Game() {
         menu = new Menu();
         dice = new Dice();
-        board = new Board();
+        board = new Board(10);
     }
 
     /**
@@ -38,26 +38,17 @@ public class Game {
      */
 
     public void start() {
-        menu.showMessage("Choisis ton personnage : 1) Warrior  2) Wizard");
-
-        Character player = menu.createCharacter();
-        menu.showMessage("Bienvenue à toi " + player.getName() + " !");
-
-
         CharacterTable characterTable = new CharacterTable();
-        characterTable.createHero(player);
 
-        List<String> heroes = new ArrayList<>();
-        heroes = characterTable.getHeroes();
-        for (String toto : heroes) { // dans la boucle for each en Java je dois le définir String et lui donner un nom
-            System.out.println(toto);
-        }
+        Character player = menu.mainCharacterMenu(characterTable);
+        if (player == null) return;
 
-
+        menu.showMessage("Bienvenue à toi " + player.getName() + " !");
         if (!menu.isGameClosed()) {
             startGame(player);
         }
     }
+
 
     /**
      * The main game loop.

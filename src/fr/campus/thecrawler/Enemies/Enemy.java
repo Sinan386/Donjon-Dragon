@@ -11,4 +11,5 @@ public abstract class Enemy {
         this.attack = attack;
         this.life = life;
     }
+
 }
