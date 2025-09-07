@@ -38,10 +38,10 @@ public class CharacterTable {
     public void createHero(Character hero) {
         Menu menu = new Menu();
 
-
+        String sql = "INSERT INTO `characters`(name, type, life_points, strength, offensive_equipment, defensive_equipment) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = this.db.getConnection();
-            String sql = "INSERT INTO `characters`(name, type, life_points, strength, offensive_equipment, defensive_equipment) VALUES (?, ?, ?, ?, ?, ?)";
+
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             // génère un ID
             ps.setString(1, hero.getName());

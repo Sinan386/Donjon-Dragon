@@ -5,6 +5,9 @@ import fr.campus.thecrawler.characters.Character;
 import fr.campus.thecrawler.core.Board;
 import fr.campus.thecrawler.core.Dice;
 import db.CharacterTable;
+import fr.campus.thecrawler.core.DiceRoller;
+import fr.campus.thecrawler.core.WeightedDice;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,8 @@ import java.util.List;
 public class Game {
 
     private final Menu menu;
-    private final Dice dice;
+    private final DiceRoller dice;
+   // private final Dice dice;
     private final Board board;
 
     /**
@@ -23,8 +27,9 @@ public class Game {
      */
     public Game() {
         menu = new Menu();
-        dice = new Dice();
-        board = new Board(10);
+        dice = new WeightedDice(); // switcher entre les 2 Dés si on veux le trucé où pas.
+        //dice = new Dice();
+        board = new Board();
     }
 
     /**

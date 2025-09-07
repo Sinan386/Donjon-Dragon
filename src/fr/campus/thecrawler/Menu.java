@@ -8,6 +8,7 @@ import fr.campus.thecrawler.core.Board;
 import fr.campus.thecrawler.core.Dice;
 import fr.campus.thecrawler.core.Cell;
 import fr.campus.thecrawler.exceptions.PersonnageHorsPlateauException;
+import fr.campus.thecrawler.core.DiceRoller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Menu {
     }
     private String getInput(String prompt) { System.out.print(prompt); return scanner.nextLine(); }
 
-    // --- Création de personnage (comme avant) ---
+    // --- Création de personnage  ---
     public Character createCharacter() {
         showMessage("Création du personnage :");
         showMessage("1) Warrior  2) Wizard");
@@ -44,7 +45,7 @@ public class Menu {
         return player;
     }
 
-    // --- Menu principal 1..4 ---
+    // --- Menu principal  ---
     public Character mainCharacterMenu(CharacterTable repo) {
         while (true) {
             displayMessage("1. Créer un nouveau personnage");
@@ -72,7 +73,7 @@ public class Menu {
         }
     }
 
-    // --- Option 2 : afficher les noms depuis la BDD (avec tes variables heroes/toto) ---
+    // ---  afficher les noms depuis la BDD  ---
     public void afficherInfosDepuisBdd(CharacterTable characterTable) {
         List<String> heroes = new ArrayList<>();
         heroes = characterTable.getHeroes();
@@ -86,7 +87,7 @@ public class Menu {
         }
     }
 
-    // --- Option 3 : choisir un héros existant (lit le type directement en BDD ici) ---
+    // ---  choisir un héros existant  ---
     private Character choisirDepuisBdd(CharacterTable repo) {
         List<String> heroes = repo.getHeroes();
         if (heroes.isEmpty()) {
@@ -127,8 +128,9 @@ public class Menu {
         return "Warrior".equalsIgnoreCase(type) ? new Warrior(name) : new Wizard(name);
     }
 
-    // --- Ton tour de jeu (conservé) ---
-    public void playerTurn(Character character, Board board, Dice dice)
+    // --- Ton tour de jeu ---
+    //public void playerTurn(Character character, Board board, Dice dice)
+    public void playerTurn(Character character, Board board, DiceRoller dice)
             throws PersonnageHorsPlateauException {
 
         String cmd = readLine("Appuie sur Entrée pour lancer le dé, ou tape 'q' pour quitter: ").trim().toLowerCase();
