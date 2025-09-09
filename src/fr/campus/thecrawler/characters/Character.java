@@ -1,5 +1,7 @@
 package fr.campus.thecrawler.characters;
 
+import fr.campus.thecrawler.equipment.OffensiveEquipment;
+
 public abstract class Character {
     private String name;
     private int attack;
@@ -68,6 +70,8 @@ public abstract class Character {
     public String getOffensiveEquipmentType(){
         return offensiveEquipmentType;
     }
+
+    public abstract boolean canUse(OffensiveEquipment offensiveEquipment);
 
     @Override
     public String toString() {
